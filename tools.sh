@@ -228,7 +228,22 @@ install_media() {
   apt_pkg gs       ghostscript             || true
   apt_pkg pdftotext poppler-utils          || true   # PDF -> text/img
   apt_pkg tesseract tesseract-ocr          || true   # OCR
-  apt_pkg yt-dlp   yt-dlp                  || true
+  install_ytdlp || apt_pkg yt-dlp yt-dlp   || true
+}
+
+# yt-dlp: the apt build lags badly and breaks against sites quickly, so prefer
+# the official standalone binary. Self-updates later with `yt-dlp -U`.
+install_ytdlp() {
+  local self="${LOCAL_BIN}/yt-dlp"
+  [[ -x "$self" ]] && { SKIPPED+=("yt-dlp"); return 0; }
+  local asset="yt-dlp_linux"
+  [[ "$ARCH" == "arm64" ]] && asset="yt-dlp_linux_aarch64"
+  log "GitHub: yt-dlp/yt-dlp ($asset)…"
+  if curl -fsSL "https://github.com/yt-dlp/yt-dlp/releases/latest/download/${asset}" -o "$self"; then
+    chmod +x "$self"; INSTALLED+=("yt-dlp"); log "installed (gh): yt-dlp"
+  else
+    rm -f "$self"; warn "yt-dlp binary download failed; falling back to apt"; return 1
+  fi
 }
 
 install_modern() {
