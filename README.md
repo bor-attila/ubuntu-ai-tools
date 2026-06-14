@@ -76,8 +76,8 @@ CakePHP beats every framework for every team.
 ## Verify
 
 ```bash
-for t in jq yq rg fd bat tldr websocat xclip ccache curl \
-         ffmpeg convert exiftool yt-dlp fzf delta sd \
+for t in jq yq rg fd batcat tldr websocat xclip ccache curl \
+         ffmpeg convert yt-dlp fzf delta sd \
          psql mysql sqlite3 sqlcmd mongosh usql; do
   command -v "$t" >/dev/null && echo "OK   $t" || echo "MISS $t"
 done
